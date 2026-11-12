@@ -1,0 +1,224 @@
+
+public abstract class MenuItem
+{
+    protected string name;
+    protected double price;
+
+    public double getPrice()
+    {
+        return price;
+    }
+
+    public abstract bool isAvailable();
+}
+
+public class Dish : MenuItem
+{
+    private int portionsLeft;
+
+    public override bool isAvailable()
+    {
+        return portionsLeft > 0;
+    }
+}
+
+public class Drink : MenuItem
+{
+    private int stockCount;
+
+    public override bool isAvailable()
+    {
+        return stockCount > 0;
+    }
+}
+
+public class Menu
+{
+    private string title;
+    private MenuItem[] menuItems;
+
+    public Menu(MenuItem[] items)
+    {
+        menuItems = items;
+    }
+
+    public Menu getMenu()
+    {
+        return this;
+    }
+
+    public bool checkAvailability(MenuItem[] items)
+    {
+        bool allAvailable = true;
+
+        foreach (MenuItem item in items)
+        {
+            if (!item.isAvailable())
+	    {
+	         Console.WriteLine(item, 'Is not available');
+		 allAvailable = false;
+	    }
+        }
+
+        return allAvailable;
+    }
+}
+
+public class Waiter
+{
+    private int employeeId;
+    private Table[] tables = new Table[3];
+    private Order[] orders = new Order[12];
+
+    public void provideMenu(Menu menu)
+    {
+        menu.getMenu();
+    }
+
+    public void takeOrder(Table[] tables)
+    {
+	for (int i = 0; i < 3; i++)
+	    for (int j = 0; j < 4; j++)
+		orders[j] = Table[i].Client[j].getOrder()
+    }
+}
+
+public class Table
+{
+    private int number;
+    private int seats;
+    private Client[] clients = new Client[4];
+    private int clientCount = 0;
+
+    public void addClient(Client client)
+    {
+        clients[clientCount] = client;
+        clientCount++;
+    }
+}
+
+public class Client
+{
+    private string name;
+    private Order order;
+
+    public void makeOrder(MenuItem[] items)
+    {
+	foreach (MenuItem[] item in items)
+	{
+	    order.addItem(item, quantity)
+	}
+    }
+
+    public Order getOrder()
+    {
+	return Order;
+    }
+}
+
+public class OrderItem
+{
+    private int quantity;
+    private MenuItem item;
+
+    public OrderItem(MenuItem item, int quantity)
+    {
+        this.item = item;
+        this.quantity = quantity;
+    }
+
+    public double getSubtotal()
+    {
+        return item.getPrice() * quantity;
+    }
+}
+
+public class Bill
+{
+    private int id;
+    private double total;
+    private bool paid;
+w
+    public Bill(int id, double total)
+    {
+        this.id = id;
+        this.total = total;
+    }
+
+    public void markPaid()
+    {
+        paid = true;
+    }
+}
+
+public class Order
+{
+    private int id;
+    private Client client;
+    private Table table;
+    
+    private OrderItem[] orderItems = new OrderItem[10];
+    private int itemCount = 0;
+
+    public Order(Client client, Table table)
+    {
+        this.client = client;
+        this.table = table;
+    }
+
+    public void addItem(MenuItem item)
+    {
+        OrderItem position = new OrderItem(item);
+
+        orderItems[itemCount] = position;
+        itemCount++;
+    }
+
+    public double calculateTotal()
+    {
+        return sumItems();
+    }
+
+    private double sumItems()
+    {
+        double sum = 0;
+
+        for (int i = 0; i < itemCount; i++)
+        {
+            sum += orderItems[i].getSubtotal();
+        }
+
+        return sum;
+    }
+
+    public Bill issueBill()
+    {
+        Bill bill = new Bill(id, calculateTotal());
+        return bill;
+    }
+}
+
+public class OrderController
+{
+    public bool checkAvailability(Menu menu, MenuItem[] items)
+    {
+        return menu.checkAvailability(items);
+    }
+
+    public Order createOrder(Client client, Table table, Menu menu, MenuItem[] items)
+    {
+        bool available = checkAvailability(menu, items);
+
+        if (!available)
+            return null;
+
+        Order order = new Order(client, table);
+
+        foreach (MenuItem item in items)
+        {
+            order.addItem(item, 1);
+        }
+
+        return order;
+    }
+}
